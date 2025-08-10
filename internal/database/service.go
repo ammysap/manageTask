@@ -39,7 +39,6 @@ func New() Service {
 			log.Errorw("error reading database config, using defaults", "err", err)
 		}
 
-		// ensure sensible default for duration if parsed as 0
 		if cfg.MaxConnectionLifetimeMins == 0 {
 			cfg.MaxConnectionLifetimeMins = 2 * time.Minute
 		}
@@ -70,25 +69,21 @@ func (s *service) GetDBConnection(ctx context.Context, dbName string) (*gorm.DB,
 		return nil, fmt.Errorf("dbName is empty")
 	}
 
-	// Read config (TASK_DB_URL / TASK_DB_READ_URL)
 	cfg, err := s.getTaskDBConfig()
 	if err != nil {
 		return nil, fmt.Errorf("read task db config: %w", err)
 	}
 
-	// Compose write DSN for the specific database
 	writeDSN, _, _, err := parseDSN(cfg.DBURL, dbName)
 	if err != nil {
 		return nil, fmt.Errorf("compose write dsn: %w", err)
 	}
 
-	// Open GORM DB
 	gormDB, err := gorm.Open(postgres.Open(writeDSN), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("gorm open: %w", err)
 	}
 
-	// Configure underlying sql.DB
 	sqlDB, err := gormDB.DB()
 	if err != nil {
 		return nil, fmt.Errorf("getting sql.DB from gorm: %w", err)
@@ -102,9 +97,7 @@ func (s *service) GetDBConnection(ctx context.Context, dbName string) (*gorm.DB,
 		sqlDB.SetConnMaxLifetime(s.maxConnLifetime)
 	}
 
-	// Ping with context to ensure connectivity
 	if err := sqlDB.PingContext(ctx); err != nil {
-		// close the pool on error to avoid leaking resources
 		_ = sqlDB.Close()
 		return nil, fmt.Errorf("ping db: %w", err)
 	}

@@ -15,6 +15,7 @@ type Endpoint interface {
 	GetTasksByID(c *gin.Context)
 	UpdateTask(c *gin.Context)
 	DeleteTask(c *gin.Context)
+	GetUser(c *gin.Context)
 }
 
 type endpoint struct {
@@ -27,6 +28,33 @@ func NewEndpoint(service Service) Endpoint {
 	}
 }
 
+func (e *endpoint) GetUser(c *gin.Context) {
+	log := logging.WithContext(c.Request.Context())
+	userID := c.Param("id")
+	if userID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User ID is required"})
+		return
+	}
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+
+	if err != nil {
+		log.Errorw("failed to parse user id", "error", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}	
+
+	user, err := e.service.GetUser(c.Request.Context(), uint(id))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"user": user,
+	})
+
+}
 func (e *endpoint) DeleteTask(c *gin.Context) {
 	log := logging.WithContext(c.Request.Context())
 	taskID := c.Param("id")

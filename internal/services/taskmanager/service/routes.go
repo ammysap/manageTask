@@ -21,6 +21,7 @@ func (r *RouteRegistrar) RegisterAuthRoutes(authGroup *gin.RouterGroup) {
 	authGroup.GET("/getTasks/:id", r.endpoint.GetTasksByID)
 	authGroup.PUT("/updateTask", r.endpoint.UpdateTask)
 	authGroup.DELETE("/deleteTask/:id", r.endpoint.DeleteTask)
+	authGroup.GET("/getUser/:id", r.endpoint.GetUser)
 }
 
 func (r *RouteRegistrar) RegisterUnAuthRoutes(unAuthGroup *gin.RouterGroup) {

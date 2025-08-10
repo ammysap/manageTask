@@ -7,7 +7,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// Status represents the status of a task.
 type Status string
 
 const (

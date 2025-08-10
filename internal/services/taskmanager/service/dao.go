@@ -10,6 +10,10 @@ type dao struct {
 	resolver database.Service
 }
 
+const (
+	TaskDB = "taskdb"
+)
+
 func NewDAO(resolver database.Service) *dao {
 	return &dao{
 		resolver: resolver,
@@ -17,7 +21,7 @@ func NewDAO(resolver database.Service) *dao {
 }
 
 func (d *dao) DeleteTask(ctx context.Context, id uint) error {
-	db, err := d.resolver.GetDBConnection(ctx, "taskdb")
+	db, err := d.resolver.GetDBConnection(ctx, TaskDB)
 	if err != nil {
 		return err
 	}
@@ -30,7 +34,7 @@ func (d *dao) DeleteTask(ctx context.Context, id uint) error {
 }
 
 func (d *dao) UpdateTask(ctx context.Context, task *Task) error {
-	db, err := d.resolver.GetDBConnection(ctx, "taskdb")
+	db, err := d.resolver.GetDBConnection(ctx, TaskDB)
 	if err != nil {
 		return err
 	}
@@ -43,7 +47,7 @@ func (d *dao) UpdateTask(ctx context.Context, task *Task) error {
 }
 
 func (d *dao) GetTasksByID(ctx context.Context, id uint) (*Task, error) {
-	db, err := d.resolver.GetDBConnection(ctx, "taskdb")
+	db, err := d.resolver.GetDBConnection(ctx, TaskDB)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +61,7 @@ func (d *dao) GetTasksByID(ctx context.Context, id uint) (*Task, error) {
 }
 
 func (d *dao) CreateTask(ctx context.Context, task *Task) error {
-	db, err := d.resolver.GetDBConnection(ctx, "taskdb")
+	db, err := d.resolver.GetDBConnection(ctx, TaskDB)
 	if err != nil {
 		return err
 	}
@@ -74,7 +78,7 @@ func (d *dao) GetTasks(ctx context.Context,
 	skip, limit int,
 	sort string,
 	) ([]Task, error) {
-	db, err := d.resolver.GetDBConnection(ctx, "taskdb")
+	db, err := d.resolver.GetDBConnection(ctx, TaskDB)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +95,7 @@ func (d *dao) GetTasks(ctx context.Context,
 }
 
 func (d *dao) GetTasksCount(ctx context.Context, query string) (int, error) {
-	db, err := d.resolver.GetDBConnection(ctx, "taskdb")
+	db, err := d.resolver.GetDBConnection(ctx, TaskDB)
 	if err != nil {
 		return 0, err
 	}

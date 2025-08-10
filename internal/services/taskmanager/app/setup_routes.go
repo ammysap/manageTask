@@ -10,6 +10,7 @@ import (
 	"github.com/aman/internal/logging"
 	"github.com/aman/internal/services/taskmanager/secure"
 	"github.com/aman/internal/services/taskmanager/service"
+	"github.com/aman/internal/services/user/pb"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -52,6 +53,7 @@ func setupRouter() (router *gin.Engine, authGroup, unAuthGroup *gin.RouterGroup)
 
 func RegisterRoutes(ctx context.Context,
 	resolver database.Service,
+	userClient pb.UserServiceClient,
 ) error  {
 	log := logging.WithContext(ctx)
 
@@ -61,7 +63,7 @@ func RegisterRoutes(ctx context.Context,
 
 	secureRouter := secure.NewRouter(authGroup, unAuthGroup)
 
-	taskService := service.NewService(resolver)
+	taskService := service.NewService(resolver, userClient)
 
 	taskRouteRegistrar := service.NewRouteRegistrar(taskService)
 

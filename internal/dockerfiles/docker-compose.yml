@@ -20,9 +20,7 @@ services:
 
   taskmanager:
     build:
-      # build context is the repo root (relative to this compose file)
       context: ../..
-      # dockerfile path relative to this compose file
       dockerfile: internal/dockerfiles/task.Dockerfile
     container_name: taskmanager
     depends_on:
@@ -37,6 +35,17 @@ services:
       - LOG_ENV=development
     ports:
       - "8080:8080"
+    restart: unless-stopped
+
+  user:
+    build:
+      context: ../..
+      dockerfile: internal/dockerfiles/user.Dockerfile
+    container_name: user
+    environment:
+      - LOG_ENV=development
+    ports:
+      - "50051:50051"
     restart: unless-stopped
 
 volumes:

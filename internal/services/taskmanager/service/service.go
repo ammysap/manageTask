@@ -5,6 +5,7 @@ import (
 
 	"github.com/aman/internal/database"
 	"github.com/aman/internal/libraries/paginate"
+	"github.com/aman/internal/services/user/pb"
 )
 
 type Service interface {
@@ -13,16 +14,29 @@ type Service interface {
 	GetTasksByID(ctx context.Context, id uint) (*Task, error)
 	UpdateTask(ctx context.Context, task *Task) error
 	DeleteTask(ctx context.Context, id uint) error
+	GetUser(ctx context.Context, id uint) (*pb.User, error)
 }
 
 type service struct {
 	dao *dao
+	userClient  pb.UserServiceClient
 }
 
-func NewService(resolver database.Service) Service {
+func NewService(resolver database.Service, userClient  pb.UserServiceClient) Service {
 	return &service{
 		dao: NewDAO(resolver),
+		userClient: userClient,
 	}
+}
+
+func (s *service) GetUser(ctx context.Context, id uint) (*pb.User, error) {
+	req := &pb.GetUserRequest{Id: uint64(id)}
+	resp, err := s.userClient.GetUser(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	
+	return resp.User, nil
 }
 
 func (s *service) DeleteTask(ctx context.Context, id uint) error {
