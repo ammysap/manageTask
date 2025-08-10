@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package user.v1;
+option go_package = "./pb";
+
+import "google/protobuf/empty.proto";
+
+message GetUserRequest {
+  uint64 id = 1;
+}
+
+message User {
+  uint64 id = 1;
+  string email = 2;
+  string name = 3;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+service UserService {
+  // Get a user by id
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+}

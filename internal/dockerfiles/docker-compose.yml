@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: taskdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d taskdb"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  taskmanager:
+    build:
+      # build context is the repo root (relative to this compose file)
+      context: ../..
+      # dockerfile path relative to this compose file
+      dockerfile: internal/dockerfiles/task.Dockerfile
+    container_name: taskmanager
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_NAME=taskdb
+      - DB_SSLMODE=disable
+      - LOG_ENV=development
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
