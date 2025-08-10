@@ -67,14 +67,9 @@ const (
 	ValueTypeString  ValueType = "string"
 	ValueTypeNumeric ValueType = "numeric"
 	ValueTypeBoolean ValueType = "boolean"
-	ValueTypeDsType  ValueType = "dsType"
 )
 
 type Sort struct {
 	Field string `json:"field"`
 	Order string `json:"order"`
-}
-
-type GroupBy struct {
-	Field string `json:"field"`
 }
