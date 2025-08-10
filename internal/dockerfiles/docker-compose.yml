@@ -20,7 +20,9 @@ services:
 
   taskmanager:
     build:
+      # build context is the repo root (relative to this compose file)
       context: ../..
+      # dockerfile path relative to this compose file
       dockerfile: internal/dockerfiles/task.Dockerfile
     container_name: taskmanager
     depends_on:

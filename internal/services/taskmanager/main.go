@@ -30,7 +30,8 @@ func main() {
 
 	// gRPC Client to User Service
 	conn, err := grpc.NewClient(
-		"localhost:50051",
+		// "localhost:50051", // Use localhost for local development
+		"user:50051", // Use service name for Docker networking
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {

@@ -9,6 +9,6 @@ type Config struct {
 }
 
 type TaskDBConfig struct {
-	DBURL     string `env:"TASK_DB_URL" env-default:"postgres://user:password@localhost:5432/taskdb?sslmode=disable"`
+	DBURL     string `env:"TASK_DB_URL" env-default:"postgres://user:password@postgres:5432/taskdb?sslmode=disable"`
 	DBReadURL string `env:"TASK_DB_READ_URL"`
 }

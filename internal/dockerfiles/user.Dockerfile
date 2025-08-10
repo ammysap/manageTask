@@ -1,16 +1,15 @@
-# Stage 1: Build everything from repo root
+# Stage 1: Build everything from repo root (so local replace paths resolve)
 FROM golang:1.24 AS builder
 
 WORKDIR /app
 
-# Copy whole repo (build context is repo root)
+# Copy the whole repo (build context is repo root)
 COPY . .
 
 # Change to the module directory for the service
 WORKDIR /app/internal/services/user
 
-# Download dependencies (this can now resolve local replace ../../database)
-ENV GOPROXY=https://goproxy.io,direct
+# Download dependencies (local replace paths like ../../database will now resolve)
 RUN go mod download
 
 # Build the service binary
