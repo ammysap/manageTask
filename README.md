@@ -339,5 +339,3 @@ This project exemplifies microservice best practices:
 These choices ensure a scalable, maintainable system where each service can be developed, tested, and deployed separately, while still working together seamlessly.
 
 ---
-
-this is my documentaion for the assignemt for notion now i need the same for my readme.md please write the readme.md file contetnt with the above content only striclty dont change any single word and design. also please give me the readme.md file so that it also looks beautifull
